@@ -1,6 +1,28 @@
 server:
   port: 8080
 
+spring:
+  cloud:
+    gateway:
+      routes:
+        # Route pour User Service
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/users/**
+        
+        # Route pour Inscription Service
+        - id: inscription-service
+          uri: lb://inscription-service
+          predicates:
+            - Path=/inscriptions/**
+      
+      # Découverte automatique des services
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
 eureka:
   instance:
     prefer-ip-address: true

@@ -4,6 +4,12 @@ spring:
   cloud:
     gateway:
       routes:
+        # Route pour Auth endpoints
+        - id: auth-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/auth/**
+
         # Route pour User Service
         - id: user-service
           uri: lb://user-service
@@ -15,6 +21,25 @@ spring:
           uri: lb://inscription-service
           predicates:
             - Path=/inscriptions/**
+
+        # Route pour Campaign endpoints
+        - id: campaign-service
+          uri: lb://inscription-service
+          predicates:
+            - Path=/campaigns/**
+          order: 1
+
+        # Route pour Soutenance Service
+        - id: soutenance-service
+          uri: lb://soutenance-service
+          predicates:
+            - Path=/soutenances/**
+
+        # Route pour Notification Service
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/notifications/**
 
       # Découverte automatique des services
       discovery:

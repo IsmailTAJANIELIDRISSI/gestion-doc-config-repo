@@ -1,8 +1,8 @@
 spring:
   application:
-    name: soutenance-service
+    name: admin-service
   datasource:
-    url: jdbc:mysql://localhost:3306/soutenance_service_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/admin_service_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -20,15 +20,8 @@ spring:
     repair-on-migrate: true
     validate-on-migrate: false
 
-  # Kafka Configuration
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
 server:
-  port: 8083
+  port: 8085
 
 eureka:
   client:
@@ -44,7 +37,7 @@ feign:
         connect-timeout: 5000
         read-timeout: 5000
 
-#Configuration des endpoints d'administration (Actuator)
+# Configuration des endpoints d'administration (Actuator)
 management:
   endpoints:
     web:
@@ -72,6 +65,20 @@ resilience4j:
         waitDurationInOpenState: 5000
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
+      notificationServiceCB:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5000
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      soutenanceServiceCB:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5000
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
 
   retry:
     instances:
@@ -82,6 +89,18 @@ resilience4j:
           - java.io.IOException
           - java.net.ConnectException
       inscriptionServiceRetry:
+        maxAttempts: 3
+        waitDuration: 1000
+        retryExceptions:
+          - java.io.IOException
+          - java.net.ConnectException
+      notificationServiceRetry:
+        maxAttempts: 3
+        waitDuration: 1000
+        retryExceptions:
+          - java.io.IOException
+          - java.net.ConnectException
+      soutenanceServiceRetry:
         maxAttempts: 3
         waitDuration: 1000
         retryExceptions:

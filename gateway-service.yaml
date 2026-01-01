@@ -41,6 +41,18 @@ spring:
           predicates:
             - Path=/notifications/**
 
+        # Route pour Email Templates
+        - id: template-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/templates/**
+
+        # Route pour Admin Service
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin/**
+
       # Découverte automatique des services
       discovery:
         locator:
